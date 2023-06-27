@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model SshKey {
+  id    Int     @id @default(autoincrement())
+  name String
+  key String @db.Text
+  servers Server[]
+}
+
+model Server {
+  id    Int     @id @default(autoincrement())
+  name String
+  ip String
+  login String
+  sshkey SshKey? @relation(fields: [sshkeyId], references: [id])
+  sshkeyId Int?
+  services Service[]
+}
+
+model Service {
+  id    Int     @id @default(autoincrement())
+  name String
+  path String
+  server Server? @relation(fields: [serverId], references: [id])
+  serverId Int?
+}
