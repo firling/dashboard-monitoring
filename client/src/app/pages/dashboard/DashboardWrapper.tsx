@@ -22,6 +22,36 @@ const DashboardPage: FC = () => (
   <>
     {/* begin::Row */}
     <div className='row g-5 g-xl-10 mb-5 mb-xl-10'>
+      <div className='col-4'>
+        <iframe 
+          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&from=1687891585418&to=1687902385418&theme=light&panelId=77"
+          width="100%" 
+          height="200" 
+          frameBorder="0"
+        ></iframe>
+      </div>
+      <div className='col-4'>
+        <iframe 
+          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&from=1687891624083&to=1687902424083&theme=light&panelId=78"
+          width="100%" 
+          height="200" 
+          frameBorder="0"
+        ></iframe>
+      </div>
+
+      <div className='col-4'>
+        <iframe 
+          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&from=1687891702050&to=1687902502050&theme=light&panelId=74" 
+          width="100%"
+          height="200" 
+          frameBorder="0"
+        ></iframe>
+      </div>
+    </div>
+    {/* end::Row */}
+
+    {/* begin::Row */}
+    <div className='row g-5 g-xl-10 mb-5 mb-xl-10'>
       {/* begin::Col */}
       <div className='col-md-6 col-lg-6 col-xl-6 col-xxl-3 mb-md-5 mb-xl-10'>
         <CardsWidget20
