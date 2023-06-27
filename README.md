@@ -8,7 +8,7 @@ Projet réalisé dans un cadre scolaire
 
 ### Serveur
 
-setup les information bdd dans le .env
+setup les informations bdd dans le .env
 
 ```bash
 cd server 
