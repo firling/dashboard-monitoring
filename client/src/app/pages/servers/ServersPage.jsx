@@ -12,7 +12,7 @@ const CreateServer = ({show, handleclose, keys, getServers}) => {
     const [key, setKey] = useState(0);
 
     const submit = () => {
-        axios.post('http://localhost:3000/servers', { 
+        axios.post(`${process.env.REACT_APP_BACKURL}/servers`, { 
             name, 
             ip,
             login,
@@ -110,21 +110,21 @@ const ServersPage = () => {
     }, [])
 
     const getKeys = () => {
-        axios.get('http://localhost:3000/sshkeys')
+        axios.get(`${process.env.REACT_APP_BACKURL}/sshkeys`)
             .then(res => {
                 setKeys(res.data);
             })
     }
 
     const getServers = () => {
-        axios.get('http://localhost:3000/servers')
+        axios.get(`${process.env.REACT_APP_BACKURL}/servers`)
             .then(res => {
                 setServers(res.data);
             })
     }
 
     const remove = (id) => {
-        axios.delete('http://localhost:3000/servers', {data: {id}})
+        axios.delete(`${process.env.REACT_APP_BACKURL}/servers`, {data: {id}})
             .then(res => {
                 getServers();
             })
