@@ -117,4 +117,32 @@ export class AppController {
 
     return resSsh.stderr;
   }
+
+  @Get('getLogs/:id')
+  async getLogs(@Param('id') id): Promise<String> {
+    const serviceData = await this.serviceService.service({
+      id: +id,
+    });
+
+    const serverData = await this.serverService.server({
+      id: serviceData.serverId,
+    });
+
+    const sshkeyData = await this.sshkeyService.sshKey({
+      id: serverData.sshkeyId,
+    });
+
+    const ssh = new NodeSSH();
+
+    await ssh.connect({
+      host: serverData.ip,
+      username: serverData.login,
+      privateKey: sshkeyData.key,
+    })
+
+    const resSsh = await ssh.execCommand(`cd ${serviceData.path} && docker compose logs`);
+
+    return resSsh.stdout;
+  }
+
 }
