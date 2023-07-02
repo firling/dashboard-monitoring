@@ -99,10 +99,148 @@ const CreateServer = ({show, handleclose, keys, getServers}) => {
     )
 }
 
+const Services = ({show, handleclose, server}) => {
+    const [logs, setLogs] = useState("")
+
+    useEffect(() => {
+      if (!server) return
+      axios.get(`${process.env.REACT_APP_BACKURL}/allServices/${server.id}`).then((res) => {
+        setLogs(res.data.replaceAll('ago', ''))
+      })
+    }, [server, show])
+
+  
+    return (
+      <Modal
+        id='kt_modal_create_app'
+        tabIndex={-1}
+        aria-hidden='true'
+        dialogClassName='modal-dialog modal-dialog-centered mw-900px'
+        show={show}
+        backdrop={true}
+        scrollable={true}
+      >
+        <div className='modal-content'>
+          <div className='modal-header'>
+            <h5 className='modal-title' id='staticBackdrop'>
+              Liste des services du serveur {server?.name}
+            </h5>
+            <div className='btn btn-sm btn-icon btn-active-color-primary' onClick={handleclose}>
+              <KTIcon className='fs-1' iconName='cross' />
+            </div>
+          </div>
+          <div className='modal-body'>
+                <div className='table-responsive'>
+                    <table className='table table-head-custom table-head-bg table-borderless table-vertical-center'>
+                        <thead>
+                            <tr className='text-uppercase'>
+                                <th>CONTAINER ID</th>
+                                <th>IMAGE</th>
+                                <th>COMMAND</th>
+                                <th>CREATED</th>
+                                <th>STATUS</th>
+                                <th>PORTS</th>
+                                <th>NAMES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {logs.split('\n').slice(1).map(log => (
+                                <tr>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <div>
+                                                <p className='text-dark-75 font-weight-bolder text-hover-primary'>
+                                                    {log.trim().split(/\s+/)[0]}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <div>
+                                                <p className='text-dark-75 font-weight-bolder text-hover-primary'>
+                                                    {log.trim().split(/\s+/)[1]}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <div>
+                                                <p className='text-dark-75 font-weight-bolder text-hover-primary'>
+                                                    {log.trim().split(/\s+/)[2]} {log.trim().split(/\s+/)[3].includes('\"') ? log.trim().split(/\s+/)[3] : ""}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <div>
+                                                <p className='text-dark-75 font-weight-bolder text-hover-primary'>
+                                                    {log.trim().split(/\s+/)[3].includes('\"') ? 
+                                                    log.trim().split(/\s+/)[4] + " " + log.trim().split(/\s+/)[5] : 
+                                                    log.trim().split(/\s+/)[3] + " " + log.trim().split(/\s+/)[4]}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <div>
+                                                <p className='text-dark-75 font-weight-bolder text-hover-primary'>
+                                                    {log.trim().split(/\s+/)[3].includes('\"') ? 
+                                                        `${log.trim().split(/\s+/)[6]} ${log.trim().split(/\s+/)[7]} ${log.trim().split(/\s+/)[8]}`
+                                                        : `${log.trim().split(/\s+/)[5]} ${log.trim().split(/\s+/)[6]} ${log.trim().split(/\s+/)[7]}`}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <div>
+                                                <p className='text-dark-75 font-weight-bolder text-hover-primary'>
+                                                    {log.trim().split(/\s+/)[8]?.includes('/tcp') && log.trim().split(/\s+/)[8]}
+                                                    {log.trim().split(/\s+/)[9]?.includes('/tcp') && log.trim().split(/\s+/)[9]}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div className='d-flex align-items-center'>
+                                            <div>
+                                                <p className='text-dark-75 font-weight-bolder text-hover-primary'>
+                                                    {log.trim().split(/\s+/).slice(-1)}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+          </div>
+          <div className='modal-footer'>
+            <button
+              type='button'
+              className='btn btn-light-primary font-weight-bold'
+              onClick={handleclose}
+            >
+              Fermer
+            </button>
+          </div>
+        </div>
+      </Modal>
+    )
+}
+
 const ServersPage = () => {
     const [show, setShow] = useState(false);
     const [servers, setServers] = useState([]);
     const [keys, setKeys] = useState([]);
+
+    const [showServices, setShowServices] = useState(false);
+    const [server, setServer] = useState(null);
 
     useEffect(() => {
         getServers();
@@ -210,6 +348,14 @@ const ServersPage = () => {
                                                                 <i className="bi bi-trash"></i>
                                                             </span>
                                                         </a>
+                                                        <a href='#' onClick={() => {
+                                                            setServer(server)
+                                                            setShowServices(true)
+                                                        }} className='btn btn-icon btn-light btn-hover-danger btn-sm ms-5'>
+                                                            <span className='svg-icon svg-icon-md svg-icon-primary'>
+                                                                <i className="bi bi-list-ul"></i>
+                                                            </span>
+                                                        </a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -222,6 +368,7 @@ const ServersPage = () => {
                 </div>
             </div>
             <CreateServer show={show} handleclose={() => setShow(false)} keys={keys} getServers={getServers} />
+            <Services show={showServices} handleclose={() => setShowServices(false)} server={server} />
         </>
     )
 }

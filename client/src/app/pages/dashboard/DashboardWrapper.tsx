@@ -24,7 +24,7 @@ const DashboardPage: FC = () => (
     <div className='row g-5 g-xl-10 mb-5 mb-xl-10'>
       <div className='col-4'>
         <iframe 
-          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&from=1687891585418&to=1687902385418&theme=light&panelId=77"
+          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&theme=light&panelId=77"
           width="100%" 
           height="200" 
           frameBorder="0"
@@ -32,7 +32,7 @@ const DashboardPage: FC = () => (
       </div>
       <div className='col-4'>
         <iframe 
-          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&from=1687891624083&to=1687902424083&theme=light&panelId=78"
+          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&theme=light&panelId=78"
           width="100%" 
           height="200" 
           frameBorder="0"
@@ -41,7 +41,7 @@ const DashboardPage: FC = () => (
 
       <div className='col-4'>
         <iframe 
-          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&from=1687891702050&to=1687902502050&theme=light&panelId=74" 
+          src="https://grafana.lepetitbac.online/d-solo/rYdddlPWk/node-exporter-full?orgId=1&theme=light&panelId=74" 
           width="100%"
           height="200" 
           frameBorder="0"

@@ -202,7 +202,7 @@ const ServiceLogs = ({show, handleclose, service}) => {
     axios.get(`${process.env.REACT_APP_BACKURL}/getLogs/${service.id}`).then((res) => {
       setLogs(res.data)
     })
-  }, [service])
+  }, [service, show])
 
   return (
     <Modal

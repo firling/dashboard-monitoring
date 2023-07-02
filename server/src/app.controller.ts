@@ -91,6 +91,29 @@ export class AppController {
     return this.serviceService.deleteService(service);
   }
 
+  @Get('allServices/:id')
+  async allServices(@Param('id') id): Promise<String> {
+    const serverData = await this.serverService.server({
+      id: +id,
+    });
+
+    const sshkeyData = await this.sshkeyService.sshKey({
+      id: serverData.sshkeyId,
+    });
+
+    const ssh = new NodeSSH();
+
+    await ssh.connect({
+      host: serverData.ip,
+      username: serverData.login,
+      privateKey: sshkeyData.key,
+    })
+
+    const resSsh = await ssh.execCommand('docker ps');
+
+    return resSsh.stdout;
+  }
+
   @Get('restartService/:id')
   async restartService(@Param('id') id): Promise<String> {
     const serviceData = await this.serviceService.service({
