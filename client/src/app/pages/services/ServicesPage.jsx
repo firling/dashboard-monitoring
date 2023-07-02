@@ -14,7 +14,7 @@ const CreateService = ({show, handleclose, servers, getServices}) => {
 
   const submit = () => {
     axios
-      .post('http://localhost:3000/services', {
+      .post(`${process.env.REACT_APP_BACKURL}/services`, {
         name,
         path,
         server,
@@ -103,14 +103,14 @@ const ServiceLine = ({service, servers, getServices}) => {
   const [isReloading, setIsReloading] = useState(false)
 
   const remove = (id) => {
-    axios.delete('http://localhost:3000/services', {data: {id}}).then((res) => {
+    axios.delete(`${process.env.REACT_APP_BACKURL}/services`, {data: {id}}).then((res) => {
       getServices()
     })
   }
 
   const restart = (id) => {
     setIsReloading(true)
-    axios.get(`http://localhost:3000/restartService/${id}`).then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKURL}/restartService/${id}`).then((res) => {
       notifications.show({
         title: 'Service redémarré',
         message: res.data.split('\n').map((line) => <p>{line}</p>),
@@ -196,13 +196,13 @@ const ServicesPage = () => {
   }, [])
 
   const getServers = () => {
-    axios.get('http://localhost:3000/servers').then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKURL}/servers`).then((res) => {
       setServers(res.data)
     })
   }
 
   const getServices = () => {
-    axios.get('http://localhost:3000/services').then((res) => {
+    axios.get(`${process.env.REACT_APP_BACKURL}/services`).then((res) => {
       setServices(res.data)
     })
   }

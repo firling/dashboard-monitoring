@@ -11,7 +11,7 @@ const CreateKey = ({show, handleclose, getKeys}) => {
     const [key, setKey] = useState('');
 
     const submit = () => {
-        axios.post('http://localhost:3000/sshkeys', { name, key })
+        axios.post(`${process.env.REACT_APP_BACKURL}/sshkeys`, { name, key })
             .then(res => {
                 handleclose();
                 getKeys();
@@ -75,14 +75,14 @@ const SshkeysPage = () => {
     }, [])
 
     const getKeys = () => {
-        axios.get('http://localhost:3000/sshkeys')
+        axios.get(`${process.env.REACT_APP_BACKURL}/sshkeys`)
             .then(res => {
                 setKeys(res.data);
             })
     }
 
     const remove = (id) => {
-        axios.delete('http://localhost:3000/sshkeys', {data: {id}})
+        axios.delete(`${process.env.REACT_APP_BACKURL}/sshkeys`, {data: {id}})
             .then(res => {
                 getKeys();
             })
