@@ -140,7 +140,7 @@ export class AppController {
       privateKey: sshkeyData.key,
     })
 
-    const resSsh = await ssh.execCommand(`cd ${serviceData.path} && docker compose logs`);
+    const resSsh = await ssh.execCommand(`cd ${serviceData.path} && docker compose logs --tail 100`);
 
     return resSsh.stdout;
   }

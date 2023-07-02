@@ -2,7 +2,7 @@
 import {useIntl} from 'react-intl'
 import {Modal} from 'react-bootstrap'
 import {KTIcon} from '../../../_metronic/helpers'
-import {useEffect, useState} from 'react'
+import {useEffect, useState, useRef} from 'react'
 import axios from 'axios'
 import {notifications} from '@mantine/notifications'
 import { LoadingOverlay } from '@mantine/core';
@@ -99,7 +99,7 @@ const CreateService = ({show, handleclose, servers, getServices}) => {
   )
 }
 
-const ServiceLine = ({service, servers, getServices}) => {
+const ServiceLine = ({service, servers, getServices, showLogs}) => {
   const [isReloading, setIsReloading] = useState(false)
 
   const remove = (id) => {
@@ -177,6 +177,15 @@ const ServiceLine = ({service, servers, getServices}) => {
               <i className='bi bi-arrow-clockwise'></i>
             </span>
           </a>
+          <a
+            href='#'
+            onClick={showLogs}
+            className='btn btn-icon btn-light btn-hover-danger btn-sm ms-5'
+          >
+            <span className='svg-icon svg-icon-md svg-icon-primary'>
+              <i className='bi bi-card-text'></i>
+            </span>
+          </a>
         </div>
       </td>
 
@@ -185,10 +194,61 @@ const ServiceLine = ({service, servers, getServices}) => {
   )
 }
 
+const ServiceLogs = ({show, handleclose, service}) => {
+  const [logs, setLogs] = useState("")
+
+  useEffect(() => {
+    if (!service) return
+    axios.get(`${process.env.REACT_APP_BACKURL}/getLogs/${service.id}`).then((res) => {
+      setLogs(res.data)
+    })
+  }, [service])
+
+  return (
+    <Modal
+      id='kt_modal_create_app'
+      tabIndex={-1}
+      aria-hidden='true'
+      dialogClassName='modal-dialog modal-dialog-centered mw-900px'
+      show={show}
+      backdrop={true}
+      scrollable={true}
+    >
+      <div className='modal-content'>
+        <div className='modal-header'>
+          <h5 className='modal-title' id='staticBackdrop'>
+            Logs du service {service?.name}
+          </h5>
+          <div className='btn btn-sm btn-icon btn-active-color-primary' onClick={handleclose}>
+            <KTIcon className='fs-1' iconName='cross' />
+          </div>
+        </div>
+        <div className='modal-body'>
+          {logs.split('\n').reverse().map((line) => (
+            <p>{line}</p>
+          ))}
+        </div>
+        <div className='modal-footer'>
+          <button
+            type='button'
+            className='btn btn-light-primary font-weight-bold'
+            onClick={handleclose}
+          >
+            Fermer
+          </button>
+        </div>
+      </div>
+    </Modal>
+  )
+}
+
 const ServicesPage = () => {
   const [show, setShow] = useState(false)
   const [services, setServices] = useState([])
   const [servers, setServers] = useState([])
+
+  const [showLogs, setShowLogs] = useState(false)
+  const [service, setService] = useState(null)
 
   useEffect(() => {
     getServices()
@@ -240,7 +300,15 @@ const ServicesPage = () => {
                     </tr>
                   </thead>
                   <tbody>
-                    {services.map((service) => <ServiceLine service={service} servers={servers} getServices={getServices} />)}
+                    {services.map((service) => <ServiceLine 
+                      service={service} 
+                      servers={servers} 
+                      getServices={getServices} 
+                      showLogs={() => {
+                        setService(service)
+                        setShowLogs(true)
+                      }}
+                    />)}
                   </tbody>
                 </table>
               </div>
@@ -253,6 +321,11 @@ const ServicesPage = () => {
         handleclose={() => setShow(false)}
         servers={servers}
         getServices={getServices}
+      />
+      <ServiceLogs
+        show={showLogs}
+        handleclose={() => setShowLogs(false)}
+        service={service}
       />
     </>
   )
